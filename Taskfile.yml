@@ -1,0 +1,28 @@
+version: '3'
+
+tasks:
+  default:
+    deps: [generate-openapi]
+
+  generate-openapi:
+    deps: [download-openapi]
+    sources:
+      - openapi.json
+      - ogen.yml
+    cmds:
+      - |
+        go run github.com/ogen-go/ogen/cmd/ogen@v1.1.0 \
+          --clean \
+          --target . \
+          --package openshock \
+          openapi.json
+
+  download-openapi:
+    generates:
+      - openapi.json
+    cmds:
+      - |
+        jq -s '.[0] * .[1]' \
+          <(curl -sS https://api.shocklink.net/swagger/1/swagger.json) \
+          <(curl -sS https://api.shocklink.net/swagger/2/swagger.json) \
+          > openapi.json

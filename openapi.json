@@ -1,0 +1,4393 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenShock.API",
+    "version": "2"
+  },
+  "servers": [
+    {
+      "url": "https://api.shocklink.net"
+    },
+    {
+      "url": "https://dev-api.shocklink.net"
+    },
+    {
+      "url": "https://localhost"
+    }
+  ],
+  "paths": {
+    "/1/account/login": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Authenticate a user",
+        "operationId": "Account_Login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/account/recover/{passwordResetId}/{secret}": {
+      "head": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Check if a password reset is in progress",
+        "operationId": "Account_PasswordResetCheckValid",
+        "parameters": [
+          {
+            "name": "passwordResetId",
+            "in": "path",
+            "description": "The id of the password reset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "secret",
+            "in": "path",
+            "description": "The secret of the password reset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Valid password reset process",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Password reset process not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Complete a password reset process",
+        "operationId": "Account_PasswordResetComplete",
+        "parameters": [
+          {
+            "name": "passwordResetId",
+            "in": "path",
+            "description": "The id of the password reset",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "secret",
+            "in": "path",
+            "description": "The secret of the password reset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordResetProcessData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password successfully changed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Password reset process not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/account/reset": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Initiate a password reset",
+        "operationId": "Account_PasswordResetInitiate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset email sent if the email is associated to an registered account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/account/signup": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Signs up a new user",
+        "operationId": "Account_SignUp",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully signed up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Username or email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/admin/monitoring/onlineDevices": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Gets all online devices",
+        "operationId": "Admin_GetOnlineDevices",
+        "responses": {
+          "200": {
+            "description": "All online devices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOnlineDeviceResponseIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOnlineDeviceResponseIEnumerableBaseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/1/device/assignLCG": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Gets the best suited LCG node for the client",
+        "operationId": "Device_GetLiveControlGateway",
+        "responses": {
+          "200": {
+            "description": "Successfully assigned LCG node",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LcgNodeResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LcgNodeResponseBaseResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Unable to find suitable LCG node",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/device/self": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Gets information about the authenticated device.",
+        "operationId": "Device_GetSelf",
+        "responses": {
+          "200": {
+            "description": "The device information was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceSelfResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceSelfResponseBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/device/pair/{pairCode}": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Pair a device with a pair code.",
+        "operationId": "Device_Pair",
+        "parameters": [
+          {
+            "name": "pairCode",
+            "in": "path",
+            "description": "The pair code to pair with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully assigned LCG node",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such pair code exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/pair/{pairCode}": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "summary": "Pair a device with a pair code.",
+        "operationId": "Device_Pair_DEPRECATED",
+        "parameters": [
+          {
+            "name": "pairCode",
+            "in": "path",
+            "description": "The pair code to pair with.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully assigned LCG node",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such pair code exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/devices/{deviceId}/ota": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Gets the OTA update history for a device",
+        "operationId": "Devices_GetOtaUpdateHistory",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "Id of the device",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtaItemIReadOnlyCollectionBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtaItemIReadOnlyCollectionBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Could not find device or you do not have access to it",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/devices": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Get all devices for the current user",
+        "operationId": "Devices_ListDevices",
+        "responses": {
+          "200": {
+            "description": "All devices for the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeviceIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeviceIEnumerableBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Create a new device for the current user",
+        "operationId": "Devices_CreateDevice",
+        "responses": {
+          "201": {
+            "description": "Successfully created device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/devices/{deviceId}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Get a device by its id",
+        "operationId": "Devices_GetDeviceById",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeviceWithTokenBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeviceWithTokenBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Edit a device",
+        "operationId": "Devices_EditDevice",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceEdit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Regenerate a device token",
+        "operationId": "Devices_RegenerateDeviceToken",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The id of the device to regenerate the token for",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully regenerated device token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to save regenerated token"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Remove a device from current user's account",
+        "operationId": "Devices_RemoveDevice",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The id of the device to delete",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/devices/{deviceId}/pair": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Get a pair code for a device",
+        "operationId": "Devices_GetPairCode",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The pair code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device does not exist or does not belong to you",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/devices/{deviceId}/lcg": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Get LCG info for a device if it is online and connected to a LCG node",
+        "operationId": "Devices_GetLiveControlGatewayInfo",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "LCG node was found and device is online",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LcgResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LcgResponseBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device is not online",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Device is online but not connected to a LCG node, you might need to upgrade your firmware to use this feature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error, lcg node could not be found"
+          }
+        }
+      }
+    },
+    "/1/devices/{deviceId}/shockers": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Get all shockers for a device",
+        "operationId": "Devices_GetShockers",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "description": "The device id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All shockers for the device",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShockerResponseIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShockerResponseIEnumerableBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device does not exists or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/public/stats": {
+      "get": {
+        "tags": [
+          "Public"
+        ],
+        "summary": "Gets online devices statistics",
+        "operationId": "Public_GetOnlineDevicesStatistics",
+        "responses": {
+          "200": {
+            "description": "The statistics were successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsResponseBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/public/shares/links/{shareLinkId}": {
+      "get": {
+        "tags": [
+          "Public"
+        ],
+        "summary": "Gets information about a public share link.",
+        "operationId": "Public_GetShareLink",
+        "parameters": [
+          {
+            "name": "shareLinkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The share link information was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicShareLinkResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicShareLinkResponseBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The share link does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shares/links/{shareLinkId}/{shockerId}": {
+      "post": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Add a shocker to a share link",
+        "operationId": "ShareLinks_AddShocker",
+        "parameters": [
+          {
+            "name": "shareLinkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share link or shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Shocker already exists in share link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Remove a shocker from a share link",
+        "operationId": "ShareLinks_RemoveShocker",
+        "parameters": [
+          {
+            "name": "shareLinkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully removed shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share link or shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Shocker does not exist in share link"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Edit a shocker in a share link",
+        "operationId": "ShareLinks_EditShocker",
+        "parameters": [
+          {
+            "name": "shareLinkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareLinkEditShocker"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareLinkResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareLinkResponseBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share link or shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Shocker does not exist in share link"
+          }
+        }
+      }
+    },
+    "/1/shares/links": {
+      "post": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Create a new share link",
+        "operationId": "ShareLinks_CreateShareLink",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareLinkCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created share link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Get all share links for the current user",
+        "operationId": "ShareLinks_List",
+        "responses": {
+          "200": {
+            "description": "All share links for the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareLinkResponseIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareLinkResponseIEnumerableBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shares/links/{shareLinkId}": {
+      "delete": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Deletes a share link",
+        "operationId": "ShareLinks_DeleteShareLink",
+        "parameters": [
+          {
+            "name": "shareLinkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted share link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share link not found or does not belong to you",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shares/links/{shareLinkId}/{shockerId}/pause": {
+      "post": {
+        "tags": [
+          "ShareLinks"
+        ],
+        "summary": "Pause a shocker in a share link",
+        "operationId": "ShareLinks_PauseShocker",
+        "parameters": [
+          {
+            "name": "shareLinkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PauseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated paused state shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PauseReasonBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PauseReasonBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share link or shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Shocker does not exist in share link"
+          }
+        }
+      }
+    },
+    "/1/shares/code/{shareCodeId}": {
+      "delete": {
+        "tags": [
+          "Shares"
+        ],
+        "summary": "Delete a share code",
+        "operationId": "Shares_DeleteShareCode",
+        "parameters": [
+          {
+            "name": "shareCodeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted share code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share code not found or does not belong to you",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Shares"
+        ],
+        "summary": "Link a share code to your account",
+        "operationId": "Shares_LinkShareCode",
+        "parameters": [
+          {
+            "name": "shareCodeId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Linked share code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share code not found or does not belong to you",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You cannot link your own shocker code / You already have this shocker linked to your account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error while linking share code to your account"
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}/logs": {
+      "get": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Get the logs for a shocker",
+        "operationId": "Shocker_GetShockerLogs",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "maximum": 500,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogEntryIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogEntryIEnumerableBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/control": {
+      "post": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Send a control message to shockers (Deprecated in favor of the /2/shockers/control endpoint)",
+        "operationId": "Shocker_SendControl_DEPRECATED",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Control"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The control messages were successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers": {
+      "post": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Register a shocker",
+        "operationId": "Shocker_RegisterShocker",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewShocker"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You can have a maximum of 11 Shockers per Device.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}": {
+      "delete": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Remove a shocker",
+        "operationId": "Shocker_RemoveShocker",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Get information about a shocker.",
+        "operationId": "Shocker_GetShockerById",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The shocker information was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShockerWithDeviceBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShockerWithDeviceBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The shocker does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Edit a shocker",
+        "operationId": "Shocker_EditShocker",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewShocker"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated shocker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shocker does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/own": {
+      "get": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "List all shockers belonging to the authenticated user.",
+        "operationId": "Shocker_ListShockers",
+        "responses": {
+          "200": {
+            "description": "The shockers were successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeviceWithShockersIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeviceWithShockersIEnumerableBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}/pause": {
+      "post": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Pause or unpause a shocker",
+        "operationId": "Shocker_PauseShocker",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PauseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully set pause state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanNullableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanNullableBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shocker not found or does not belong to you",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/shared": {
+      "get": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "List all shockers shared with the authenticated user.",
+        "operationId": "Shocker_ListSharedShockers",
+        "responses": {
+          "200": {
+            "description": "The shockers were successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerShockerResponseIEnumerableIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerShockerResponseIEnumerableIEnumerableBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}/shares": {
+      "get": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Get all shares for a shocker",
+        "operationId": "Shocker_GetShockerShares",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "Id of the shocker",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareInfoIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareInfoIEnumerableBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The shocker does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Create a share code for a shocker",
+        "operationId": "Shocker_ShockerShareCodeCreate",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShareCode"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The share code was successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuidBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shocker does not exists or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}/shareCodes": {
+      "get": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "List all share codes for a shocker",
+        "operationId": "Shocker_ShockerShareCodeList",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareCodeInfoIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareCodeInfoIEnumerableBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}/shares/{sharedWithUserId}": {
+      "delete": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Remove a share code for a shocker",
+        "operationId": "Shocker_ShockerShareCodeRemove",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sharedWithUserId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully removed share code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share does not exists or device/shocker does not belong to you nor is shared with you",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Update a share code for a shocker",
+        "operationId": "Shocker_ShockerShareCodeUpdate",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sharedWithUserId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShareCode"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated share code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The share code does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/shockers/{shockerId}/shares/{sharedWithUserId}/pause": {
+      "post": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Pause/Unpause a share code for a shocker",
+        "operationId": "Shocker_ShockerShareCodePause",
+        "parameters": [
+          {
+            "name": "shockerId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sharedWithUserId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PauseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated pause status share",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The share code does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/tokens": {
+      "get": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "List all tokens for the current user",
+        "operationId": "Tokens_ListTokens",
+        "responses": {
+          "200": {
+            "description": "All tokens for the current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseIEnumerableBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseIEnumerableBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "Create a new token",
+        "operationId": "Tokens_CreateToken",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/tokens/{tokenId}": {
+      "get": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "Get a token by id",
+        "operationId": "Tokens_GetTokenById",
+        "parameters": [
+          {
+            "name": "tokenId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The token does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "Revoke a token from the current user",
+        "operationId": "Tokens_DeleteToken",
+        "parameters": [
+          {
+            "name": "tokenId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The token does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "Edit a token",
+        "operationId": "Tokens_EditToken",
+        "parameters": [
+          {
+            "name": "tokenId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The edited token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The token does not exist or you do not have access to it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1/users/self": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get the current user's information.",
+        "operationId": "Users_GetSelf",
+        "responses": {
+          "200": {
+            "description": "The user's information was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfResponseBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/1": {
+      "get": {
+        "tags": [
+          "Version"
+        ],
+        "summary": "Gets the version of the OpenShock backend.",
+        "operationId": "Version_GetBackendVersion",
+        "responses": {
+          "200": {
+            "description": "The version was successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootResponseBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootResponseBaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/2/account/login": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Authenticate a user",
+        "operationId": "Account_LoginV2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/2/account/signup": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Signs up a new user",
+        "operationId": "Account_SignUpV2",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User successfully signed up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Username or email already exists"
+          }
+        }
+      }
+    },
+    "/2/shockers/control": {
+      "post": {
+        "tags": [
+          "Shocker"
+        ],
+        "summary": "Send a control message to shockers",
+        "operationId": "Shocker_SendControl",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ControlRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The control messages were successfully sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectBaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenShockProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdminOnlineDeviceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner": {
+            "$ref": "#/components/schemas/GenericIni"
+          },
+          "firmwareVersion": {
+            "title": "SemVer",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            "type": "string",
+            "nullable": true,
+            "example": "1.0.0-dev+a16f2"
+          },
+          "gateway": {
+            "type": "string",
+            "nullable": true
+          },
+          "connectedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdminOnlineDeviceResponseIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminOnlineDeviceResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BooleanNullableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Control": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ControlType"
+          },
+          "intensity": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "maximum": 30000,
+            "minimum": 300,
+            "type": "integer",
+            "format": "int32"
+          },
+          "exclusive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControlLogSenderLight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "customName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControlType": {
+        "enum": [
+          "Stop",
+          "Shock",
+          "Vibrate",
+          "Sound"
+        ],
+        "type": "string"
+      },
+      "CreateShareCode": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "$ref": "#/components/schemas/ShockerPermissions"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/ShockerLimits"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTokenRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionType"
+            },
+            "nullable": true
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceEdit": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 32,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceSelfResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "shockers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MinimalShocker"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DeviceSelfResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DeviceSelfResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EditTokenRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionType"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenericIni": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GuidBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LcgNodeResponse": {
+        "type": "object",
+        "properties": {
+          "fqdn": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LcgNodeResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/LcgNodeResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LcgResponse": {
+        "type": "object",
+        "properties": {
+          "gateway": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LcgResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/LcgResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ControlType"
+          },
+          "controlledBy": {
+            "$ref": "#/components/schemas/ControlLogSenderLight"
+          },
+          "intensity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogEntryIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogEntry"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MinimalShocker": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rfId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ShockerModelType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NewShocker": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 48,
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "rfId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "device": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ShockerModelType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ObjectBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OpenShockProblem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true,
+            "deprecated": true
+          },
+          "traceId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "OtaItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OtaUpdateStatus"
+          },
+          "version": {
+            "title": "SemVer",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+            "type": "string",
+            "nullable": true,
+            "example": "1.0.0-dev+a16f2"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OtaItemIReadOnlyCollectionBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OtaItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OtaUpdateStatus": {
+        "enum": [
+          "Started",
+          "Running",
+          "Finished",
+          "Error",
+          "Timeout"
+        ],
+        "type": "string"
+      },
+      "OwnerShockerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SharedDevice"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OwnerShockerResponseIEnumerableIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OwnerShockerResponse"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PasswordResetProcessData": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PauseReasonBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "title": "PauseReason",
+            "type": "integer",
+            "description": "An integer representing the reason(s) for the shocker being paused, expressed as a bitfield where reasons are OR'd together.\n\nEach bit corresponds to:\n- 1: Shocker\n- 2: Share\n- 4: ShareLink\n\nFor example, a value of 6 (2 | 4) indicates both 'Share' and 'ShareLink' reasons.",
+            "example": 6
+          }
+        },
+        "additionalProperties": false
+      },
+      "PauseRequest": {
+        "type": "object",
+        "properties": {
+          "pause": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PermissionType": {
+        "enum": [
+          "Shockers_Use"
+        ],
+        "type": "string"
+      },
+      "PublicShareLinkResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "author": {
+            "$ref": "#/components/schemas/GenericIni"
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareLinkDevice"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicShareLinkResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PublicShareLinkResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RankType": {
+        "enum": [
+          "User",
+          "Support",
+          "Staff",
+          "Admin",
+          "System"
+        ],
+        "type": "string"
+      },
+      "ResetRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseDevice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseDeviceIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseDevice"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseDeviceWithShockers": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "shockers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShockerResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseDeviceWithShockersIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResponseDeviceWithShockers"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseDeviceWithToken": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseDeviceWithTokenBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ResponseDeviceWithToken"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RootResponse": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "nullable": true
+          },
+          "commit": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RootResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/RootResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SelfResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "rank": {
+            "$ref": "#/components/schemas/RankType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SelfResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/SelfResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareCodeInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareCodeInfoIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareCodeInfo"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareInfo": {
+        "type": "object",
+        "properties": {
+          "sharedWith": {
+            "$ref": "#/components/schemas/GenericIni"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/ShockerPermissions"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/ShockerLimits"
+          },
+          "paused": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareInfoIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareInfo"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiresOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkDevice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "shockers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareLinkShocker"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkEditShocker": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "$ref": "#/components/schemas/ShockerPermissions"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/ShockerLimits"
+          },
+          "cooldown": {
+            "maximum": 30000,
+            "minimum": 300,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ShareLinkResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkResponseIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShareLinkResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShareLinkShocker": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/ShockerPermissions"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/ShockerLimits"
+          },
+          "paused": {
+            "title": "PauseReason",
+            "type": "integer",
+            "description": "An integer representing the reason(s) for the shocker being paused, expressed as a bitfield where reasons are OR'd together.\n\nEach bit corresponds to:\n- 1: Shocker\n- 2: Share\n- 4: ShareLink\n\nFor example, a value of 6 (2 | 4) indicates both 'Share' and 'ShareLink' reasons.",
+            "example": 6
+          }
+        },
+        "additionalProperties": false
+      },
+      "SharedDevice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "shockers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SharedShocker"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SharedShocker": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "$ref": "#/components/schemas/ShockerPermissions"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/ShockerLimits"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShockerLimits": {
+        "type": "object",
+        "properties": {
+          "intensity": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "duration": {
+            "maximum": 30000,
+            "minimum": 300,
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShockerModelType": {
+        "enum": [
+          "CaiXianlin",
+          "PetTrainer",
+          "Petrainer998DR"
+        ],
+        "type": "string"
+      },
+      "ShockerPermissions": {
+        "type": "object",
+        "properties": {
+          "vibrate": {
+            "type": "boolean"
+          },
+          "sound": {
+            "type": "boolean"
+          },
+          "shock": {
+            "type": "boolean"
+          },
+          "live": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShockerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rfId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ShockerModelType"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShockerResponseIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShockerResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShockerWithDevice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rfId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "model": {
+            "$ref": "#/components/schemas/ShockerModelType"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "device": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ShockerWithDeviceBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ShockerWithDevice"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SignUp": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "pattern": "^[^\\s].*[^\\s]$",
+            "type": "string",
+            "nullable": true,
+            "example": "String"
+          },
+          "password": {
+            "maxLength": 256,
+            "minLength": 12,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatsResponse": {
+        "type": "object",
+        "properties": {
+          "devicesOnline": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatsResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/StatsResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByIp": {
+            "type": "string",
+            "nullable": true
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionType"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenResponseBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TokenResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TokenResponseIEnumerableBaseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TokenResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ControlRequest": {
+        "type": "object",
+        "properties": {
+          "shocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Control"
+            },
+            "nullable": true
+          },
+          "customName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginV2": {
+        "required": [
+          "email",
+          "password",
+          "turnstileResponse"
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "turnstileResponse": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SignUpV2": {
+        "required": [
+          "turnstileResponse"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "pattern": "^[^\\s].*[^\\s]$",
+            "type": "string",
+            "nullable": true,
+            "example": "String"
+          },
+          "password": {
+            "maxLength": 256,
+            "minLength": 12,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "turnstileResponse": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "OpenShockToken": {
+        "type": "apiKey",
+        "description": "API Token Authorization header.",
+        "name": "OpenShockToken",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "OpenShockToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Shocker",
+      "description": "Shocker management"
+    },
+    {
+      "name": "Account",
+      "description": "User account management"
+    }
+  ]
+}
