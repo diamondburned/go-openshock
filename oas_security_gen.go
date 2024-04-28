@@ -13,11 +13,11 @@ import (
 type SecuritySource interface {
 	// OpenShockToken provides OpenShockToken security value.
 	// API Token Authorization header.
-	OpenShockToken(ctx context.Context, operationName string, client *Client) (OpenShockToken, error)
+	OpenShockToken(ctx context.Context, operationName string) (OpenShockToken, error)
 }
 
 func (s *Client) securityOpenShockToken(ctx context.Context, operationName string, req *http.Request) error {
-	t, err := s.sec.OpenShockToken(ctx, operationName, s)
+	t, err := s.sec.OpenShockToken(ctx, operationName)
 	if err != nil {
 		return errors.Wrap(err, "security source \"OpenShockToken\"")
 	}

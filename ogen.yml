@@ -3,6 +3,5 @@ generator:
     enable: 
       - paths/client
       - client/request/validation
-      - client/security/reentrant
       - debug/example_tests
     disable_all: true
